@@ -36,6 +36,7 @@ i.tabbar-demo-icon-4 {
 a
 {
   font-size: 14px;
+  color: #fbdb04;
 }
 .pull-right
 {
@@ -126,7 +127,7 @@ p {
 }
 .logo-box img
 {
-    width: 100%;
+    width: 50%;
 }
 
 
@@ -145,11 +146,24 @@ p {
 
 /*pages color schemes for the different pages*/
 
-#landing
+#landing, .login-screen-content
 {
- background-color: #9932CC !important;
- background: rgb(75,0,130) !important;
+	background: rgba(103,56,148,1);
+	background: -moz-radial-gradient(center, ellipse cover, rgba(103,56,148,1) 0%, rgba(40,22,73,1) 100%);
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(103,56,148,1)), color-stop(100%, rgba(40,22,73,1)));
+	background: -webkit-radial-gradient(center, ellipse cover, rgba(103,56,148,1) 0%, rgba(40,22,73,1) 100%);
+	background: -o-radial-gradient(center, ellipse cover, rgba(103,56,148,1) 0%, rgba(40,22,73,1) 100%);
+	background: -ms-radial-gradient(center, ellipse cover, rgba(103,56,148,1) 0%, rgba(40,22,73,1) 100%);
+	background: radial-gradient(ellipse at center, rgba(103,56,148,1) 0%, rgba(40,22,73,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#673894', endColorstr='#281649', GradientType=1 );
+}
 
+.login-screen-content h2, .content-block-inner p, .login-screen-content, .login-screen-content .list-block input[type="time"], .login-screen-content  .list-block input[type="number"], .login-screen-content  .list-block input[type="search"], .login-screen-content  .list-block input[type="text"], .login-screen-content  .list-block input[type="password"], .login-screen-content  .list-block input[type="email"], .login-screen-content  .list-block input[type="tel"], .login-screen-content  .list-block input[type="url"], .login-screen-content  .list-block input[type="date"], .login-screen-content  .list-block input[type="datetime-local"], .login-screen-content  .list-block select, .login-screen-content  .list-block textarea{color:#fff;}
+.content-block-inner{background: none;}
+.button.active {
+  background: #fbdb04;
+  color: #3c3c3c;
+  border:none;
 }
 
 /*END OF PAGES COLOR SCHEMES*/
@@ -194,6 +208,7 @@ p {
   margin: 0 auto;
   height: 100%;
   width: 100%;
+  text-align: center;
 }
 
 .infinite-scroll-preloader {
@@ -204,14 +219,60 @@ p {
 .infinite-scroll-preloader .preloader {
   width:34px;
   height:34px;
-}        
+}   
 
+.content-block {
+    margin: 50% 0 0;
+}
 
+.clear-both{clear:both;}
 
+.top-left, .top-right, .bottom-left, .bottom-right, .top-left-yellow, .top-right-yellow, .bottom-left-yellow, .bottom-right-yellow {
+  	width: 0;
+	height: 0;
+	border-style: solid;
+	position: absolute;
+} 
 
+.top-left {border-color: rgb(103,56,148) transparent transparent transparent; border-width: 148px 148px 0 0;}
+.top-right {border-color: transparent rgb(103,56,148) transparent transparent; border-width: 0 148px 148px 0;right: 0px;}
+.bottom-left {border-color: transparent transparent transparent rgb(103,56,148); border-width: 148px 0 0 148px;bottom: 0px;}
+.bottom-right {border-color: transparent transparent rgb(103,56,148) transparent; border-width: 0 0 148px 148px;bottom: 0px;right: 0px;}
 
+.top-left-yellow {border-color: rgb(251,219,4) transparent transparent transparent; border-width: 150px 150px 0 0;}
+.top-right-yellow {border-color: transparent rgb(251,219,4) transparent transparent; border-width: 0 150px 150px 0;right: 0px;}
+.bottom-left-yellow {border-color: transparent transparent transparent rgb(251,219,4); border-width: 150px 0 0 150px;bottom: 0px;}
+.bottom-right-yellow {border-color: transparent transparent rgb(251,219,4) transparent; border-width: 0 0 150px 150px;bottom: 0px;right: 0px;}
 
+@media screen and (max-width: 320px) {
+    .top-left {border-width: 98px 98px 0 0;}
+	.top-right {border-width: 0 98px 98px 0;right: 0px;}
+	.bottom-left {border-width: 98px 0 0 98px;bottom: 0px;}
+	.bottom-right {border-width: 0 0 98px 98px;bottom: 0px;right: 0px;}
+	
+    .top-left-yellow {border-width: 100px 100px 0 0;}
+	.top-right-yellow {border-width: 0 100px 100px 0;right: 0px;}
+	.bottom-left-yellow {border-width: 100px 0 0 100px;bottom: 0px;}
+	.bottom-right-yellow {border-width: 0 0 100px 100px;bottom: 0px;right: 0px;}
+	
+	.content-block {
+		margin: 45% 0 0;
+	}
+}
 
+@media screen and (max-width: 240px) {
+    .top-left {border-width: 48px 48px 0 0;}
+	.top-right {border-width: 0 48px 48px 0;right: 0px;}
+	.bottom-left {border-width: 48px 0 0 48px;bottom: 0px;}
+	.bottom-right {border-width: 0 0 48px 48px;bottom: 0px;right: 0px;}
+	
+    .top-left-yellow {border-width: 50px 50px 0 0;}
+	.top-right-yellow {border-width: 0 50px 50px 0;right: 0px;}
+	.bottom-left-yellow {border-width: 50px 0 0 50px;bottom: 0px;}
+	.bottom-right-yellow {border-width: 0 0 50px 50px;bottom: 0px;right: 0px;}
+}
 
-
-
+.login-screen-content .content-block, .login-screen-content .list-block, .login-screen-content .list-block-label, .login-screen-content .login-screen-title {margin: 5% auto;}
+#sign-up-header {
+  border-bottom: 2px solid #f5bf1a ;
+}
