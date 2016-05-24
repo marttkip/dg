@@ -230,7 +230,43 @@ p {
 .infinite-scroll-preloader .preloader {
   width:34px;
   height:34px;
-}   
+}        
+
+
+.article-footer
+{
+  border-top: 1px solid #c3c3c3;
+  text-align: center;
+  color: #c3c3c3;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.event-items
+{
+  color: #c3c3c3;
+  font-size: 11px;
+
+}
+.article-content p
+{
+  font-size: 13px !important;
+}
+.list-block .item-content {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  min-height: 44px;
+  padding-left: 11px !important;
+  padding-right: 5px !important;
+}
+
+.content-block {
+  margin: 0px !important;
+}
+.list-block .item-text {
+  font-size: 13px !important;
+}
 
 .content-block {
     margin: 50% 0 0;

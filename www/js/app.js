@@ -242,74 +242,6 @@ function HideModalPopup()
 }
 
 //Login member
-$(document).on("submit","form#login_member",function(e)
-{
-	e.preventDefault();
-	
-	
-	$("#login_response").html('').fadeIn( "slow");
-	$("#loader-wrapper" ).removeClass( "display_none" );
-	
-	//check if there is a network connection
-	var connection = true;//is_connected();
-	
-	if(connection === true)
-	{
-		var service = new Login_service();
-		service.initialize().done(function () {
-			console.log("Service initialized");
-		});
-		
-		//get form values
-		var member_no = $("input[name=member_no]").val();
-		var password = $("input[name=password]").val();
-		
-		service.login_member(member_no, password).done(function (employees) {
-			var data = jQuery.parseJSON(employees);
-			
-			if(data.message == "success")
-			{
-				//display login items
-				service.get_member_details(member_no).done(function (employees) {
-				var data_two = jQuery.parseJSON(employees);
-				var first_name = data_two.member_first_name;
-				$( "#user_logged_in" ).html( '<h4>Welcome back '+first_name+'</h4>' );
-				});
-				
-				$( ".main-nav ul li#pro_social" ).css( "display", 'inline-block' );
-				$( ".main-nav ul li#profile" ).css( "display", 'inline-block' );
-				$( ".main-nav ul li#cpd_live" ).css( "display", 'inline-block' );
-				$( ".user-nav ul li#my_account" ).css( "display", 'inline-block' );
-	
-
-				// $( "#first_page" ).css( "display_none", 'inline-block' );
-				// $( "#logged_in_page" ).css( "display", 'inline-block' );
-				
-				$( "#login_icon" ).html( '<a href="my-profile.html" class="close-popup"><img src="images/icons/white/user.png" alt="" title="" onClick="get_profile_details()"/><span>Profile</span></a>' );
-				$( "#profile_icon" ).html( '<li><a href="my-profile.html" class="close-popup"><img src="images/icons/white/user.png" alt="" title="" onClick="get_profile_details()"/><span>Profile</span></a></li>' );
-
-				$('.popup-login').removeClass('modal-in');
-				$('.popup-login').css('display', 'none');
-				$('.popup-overlay').removeClass('modal-overlay-visible');
-				
-				
-			}
-			else
-			{
-				$("#login_response").html('<div class="alert alert-danger center-align">'+data.result+'</div>').fadeIn( "slow");
-			}
-			
-			$( "#loader-wrapper" ).addClass( "display_none" );
-        });
-	}
-	
-	else
-	{
-		$("#login_response").html('<div class="alert alert-danger center-align">'+"No internet connection - please check your internet connection then try again"+'</div>').fadeIn( "slow");
-		$( "#loader-wrapper" ).addClass( "display_none" );
-	}
-	return false;
-});
 
 
 //Login member
@@ -318,8 +250,6 @@ $(document).on("submit","form#login_forum_member",function(e)
 	e.preventDefault();
 	//get form values
 	var form_data = new FormData(this);
-	$("#login_response").html('').fadeIn( "slow");
-	$("#loader-wrapper" ).removeClass( "display_none" );
 	
 	//check if there is a network connection
 	var connection = true;//is_connected();
@@ -368,30 +298,27 @@ $(document).on("submit","form#login_forum_member",function(e)
 				//set local variables for future auto login
 
 				window.localStorage.setItem("level_id", data.level);
-				window.localStorage.setItem("email_address", $("input[name=email_address]").val());
-				window.localStorage.setItem("member_number", $("input[name=member_number]").val());
+				myApp.alert('You have successfully logged in', 'Login Response');
 
-				$('.popup-login').removeClass('modal-in');
-				$('.popup-login').css('display', 'none');
-				$('.popup-overlay').removeClass('modal-overlay-visible');
-				// $("#login_response").html('<div class="alert alert-danger center-align">'+"Welcome back, to make comments to young professionals press continue "+'</div>').fadeIn( "slow");
+				var mainView = myApp.addView('.view-main');
+	
+				mainView.router.loadPage('dist/dashboard.html');
 
 			}
 			else
 			{
-				$("#login_response").html('<div class="alert alert-danger center-align">'+data.result+'</div>').fadeIn( "slow");
-
+				myApp.alert(''+data.result+'', 'Login Response');
 			}
 			
-			$( "#loader-wrapper" ).addClass( "display_none" );
 
         });
 	}
 	
 	else
 	{
-		$("#login_response").html('<div class="alert alert-danger center-align">'+"No internet connection - please check your internet connection then try again"+'</div>').fadeIn( "slow");
-		$( "#loader-wrapper" ).addClass( "display_none" );
+		myApp.addNotification({
+	        message: 'No internet connection - please check your internet connection then try again'
+	    });
 	}
 	return false;
 });
@@ -723,61 +650,5 @@ function backtodashboard()
 
 }
 
-$$(document).on('pageInit', '.page[data-page="event-page"]', function (e) 
-{
-	$( "#dashboard-back" ).removeClass( "display_none" );
-	$( "#side-menu-bars" ).addClass( "display_none" );
 
-	var myApp = new Framework7(); 
- 
-	var $$ = Dom7;
-	 
-	// Loading flag
-	var loading = false;
-	 
-	// Last loaded index
-	var lastIndex = $$('.list-block li').length;
-	 
-	// Max items to load
-	var maxItems = 60;
-	 
-	// Append items per load
-	var itemsPerLoad = 20;
-	 
-	// Attach 'infinite' event handler
-	$$('.infinite-scroll').on('infinite', function () {
-	 
-	  // Exit, if loading in progress
-	  if (loading) return;
-	 
-	  // Set loading flag
-	  loading = true;
-	 
-	  // Emulate 1s loading
-	  setTimeout(function () {
-	    // Reset loading flag
-	    loading = false;
-	 
-	    if (lastIndex >= maxItems) {
-	      // Nothing more to load, detach infinite scroll events to prevent unnecessary loadings
-	      myApp.detachInfiniteScroll($$('.infinite-scroll'));
-	      // Remove preloader
-	      $$('.infinite-scroll-preloader').remove();
-	      return;
-	    }
-	 
-	    // Generate new items HTML
-	    var html = '';
-	    for (var i = lastIndex + 1; i <= lastIndex + itemsPerLoad; i++) {
-	      html += '<li class="item-content"><div class="item-inner"><div class="item-title">Item ' + i + '</div></div></li>';
-	    }
-	 
-	    // Append new items
-	    $$('.list-block ul').append(html);
-	 
-	    // Update last loaded index
-	    lastIndex = $$('.list-block li').length;
-	  }, 1000);
-	});
-});
 
