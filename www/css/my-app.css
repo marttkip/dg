@@ -169,7 +169,12 @@ p {
 /*END OF PAGES COLOR SCHEMES*/
 
 /*button themes*/
-
+.button-expand {
+  font-weight: bold;
+  height: 75px !important;
+  margin-bottom: 5px;
+  padding: 15px !important;
+}
 .button-red
 {
   background: #ffc107 !important;
@@ -179,6 +184,12 @@ p {
 {
   background: #8bc34a !important;
   border-color: #4caf50 !important;
+}
+.button-white
+{
+  background: #673894 !important;
+  color: #fff !important;
+  border: none;
 }
 
 .button-white {
@@ -276,3 +287,4 @@ p {
 #sign-up-header {
   border-bottom: 2px solid #f5bf1a ;
 }
+.content-block{color:#fff;}
