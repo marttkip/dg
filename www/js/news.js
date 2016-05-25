@@ -142,7 +142,6 @@ function get_news_items()
 
 $$(document).on('pageInit', '.page[data-page="event-page"]', function (e) 
 {
-	alert("this is the problem");
 	$( "#dashboard-back" ).removeClass( "display_none" );
 	$( "#side-menu-bars" ).addClass( "display_none" );
 	var service = new EmployeeNewsService();
