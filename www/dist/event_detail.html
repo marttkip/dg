@@ -1,0 +1,71 @@
+<div class="pages">
+    <!-- Page, data-page contains page name-->
+    <div data-page="single-event" class="page navbar-fixed">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="left">
+					<a href="#" class="link" onclick="back_refresh()">
+						<i class="fa fa-angle-left" aria-hidden="true"></i>
+						<span>Back</span>
+					</a>
+				</div>
+                <!-- We have home navbar without left link-->
+				<div class="center"><h3 class="choto">Event</h3></div>
+                <div class="right">
+                    <!-- Right link contains only icon - additional "icon-only" class-->
+                    <a onClick="dist/profile.html" href="#" id="profile-icon" class="link icon-only" > 
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+			</div>
+		</div>
+        
+		<!-- Scrollable page content-->
+		<div class="page-content">
+			<div id="event_details"></div>
+            
+            <div class="page_content">  
+            	<div class="post_title_single"><h2>Comments</h2></div>    
+                <div class="buttons-row">
+                    <a href="#tab1" class="tab-link active button">Leave a comment</a>
+                    <a href="#tab2" class="tab-link button">Comments</a>
+                </div>
+            
+                <div class="tabs-animated-wrap">
+                    <div class="tabs">
+                        <div id="tab1" class="tab active">
+                            <div id="comments_error"></div>
+                            <div class="list-block">
+                                <form id="CommentForm" method="post" action="">
+                                    <input type="hidden" name="post_id" id="comment_post_id">
+                                    <ul>
+                                        <li>
+                                            <div class="item-content">
+                                                <div class="item-inner">
+                                                    <div class="item-input">
+                                                        <textarea name="comment" id="Comment" class="form_textarea" placeholder="Comment"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="item-content">
+                                                <div class="item-inner">
+                                                    <button type="submit" class="button button-big active" style="width:100%;">Add Comment</button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+                        </div>
+            
+                        <div id="tab2" class="tab">
+                            <ul class="comments" id="forum_comments"></ul>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

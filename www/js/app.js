@@ -1,43 +1,6 @@
 var myApp = new Framework7();
 var $$ = Dom7;
 
-
-//login & registration functions
-var Login_service = function() {
-
-    var url;
-
-    this.initialize = function(serviceURL) {
-        url = serviceURL ? serviceURL : base_url;
-        var deferred = $.Deferred();
-        deferred.resolve();
-        return deferred.promise();
-    }
-
-    this.findById = function(id) {
-        return $.ajax({url: url + "/" + id});
-    }
-
-    this.register_member = function(form_data) {
-		var request = url + "login/register_user";
-        return $.ajax({url: request, data: form_data, type: 'POST', processData: false,contentType: false});
-    }
-    this.login_to_forum = function(form_data) {
-		var request = url + "login/login_forum_member";
-        return $.ajax({url: request, data: form_data, type: 'POST', processData: false,contentType: false});
-    }
-    this.login_automatic_to_forum = function(email_address_old,member_number_old) {
-		var request = url + "login/login_forum_member";
-        return $.ajax({url: request, data: {email_address :email_address_old ,member_number: member_number_old}, type: 'POST', processData: false,contentType: false});
-    }
-    this.getProfileDetails = function() {
-		var request = url + "login/get_client_profile";
-        return $.ajax({url: request});
-    }
-
-}
-
-
 /* Function to check for network connectivity */
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -45,8 +8,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 //
 function onDeviceReady() 
 {
-    
-    cordova.plugins.backgroundMode.setDefaults({ title:'ICPAK LIVE', text:'ICPAK LIVE', silent: true});
+    /*cordova.plugins.backgroundMode.setDefaults({ title:'ICPAK LIVE', text:'ICPAK LIVE', silent: true});
     
     //check if background action is enabled
     var enabled = cordova.plugins.backgroundMode.isEnabled();
@@ -69,185 +31,84 @@ function onDeviceReady()
         cordova.plugins.backgroundMode.configure({
                         text:errorCode
                     });        
-    };
+    };*/
+	document.addEventListener("backbutton", onBackKeyDown, false);
+	//document.addEventListener("menubutton", onMenuKeyDown, false);
+}
+
+function back_refresh() {
+	// Handle the back button
+	myApp.showIndicator();
+	
+	var mainView = myApp.addView('.view-main');
+	mainView.router.back();
+	mainView.router.refreshPage();
+	
+	myApp.hideIndicator();
+}
+
+function onBackKeyDown() {
+	// Handle the back button
+	var mainView = myApp.addView('.view-main');
+	mainView.router.back();
+	mainView.router.refreshPage();
+}
+
+function onMenuKeyDown() {
+	// Handle the back button
+	alert('menu button');
 }
 
 $(document).ready(function(){
-
+	//localStorage.clear();
 	myApp.showIndicator();
-	    setTimeout(function () {
-	        myApp.hideIndicator();
-
-				var level = window.localStorage.getItem("level_id");
-				if(level == 1)
-				{
-					// junior tab be open for comment
-					$( "#junior" ).css( "display", 'inline-block' );
-					$( "#junior-button" ).css( "display", 'none' );
-
-					$( "#senior-message" ).html( "<p>You can only make comments on Juniors' Forum</p>");
-					$( "#badge-response" ).html( "<p>You can only make comments on Juniors' Forum </p>");
-
-				}
-				else if(level == 2)
-				{
-					// senior tab be open for comment
-					$( "#senior" ).css( "display", 'inline-block' );
-					$( "#senior-button" ).css( "display", 'none' );
-
-					$( "#junior-message" ).html( "<p>You can only make comments on Seniors' Forum</p>");
-					$( "#badge-response" ).html( "<p>You can only make comments on Seniors' Forum </p>");
-				}
-				else if(level == 3)
-				{
-					// young professionals tab be open for comment 
-					$( "#professionals" ).css( "display", 'inline-block' );
-					$( "#professionals-button" ).css( "display", 'none' );
-
-					$( "#senior-message" ).html( "<p>You can only make comments on Young Professionals Forum</p>");
-					$( "#badge-response" ).html( '<div class="alert alert-danger center-align">You can only make comments on Young Professionals Forum </div>"');
-				}
-				//set local variables for future auto login
-
-				// change the page to home 
-				var mainView = myApp.addView('.view-main');
-	
-				mainView.router.loadPage('dist/about.html');
-
+	setTimeout(function () {
+		myApp.hideIndicator();
+		
+		// change the page to home 
+		var mainView = myApp.addView('.view-main');
+		mainView.router.loadPage('dist/about.html');
 	 }, 2000);
-	
-	//automatic_login();
 });
 
 function automatic_login()
 {
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-
+	myApp.showIndicator();
+	//window.localStorage.setItem("logged_in", 'no');
+	var logged_in = window.localStorage.getItem("logged_in");
 	
-	var service = new Login_service();
-	service.initialize().done(function () {
-		console.log("Service initialized");
-	});
-
-	//get member's credentials
-	var email_address = window.localStorage.getItem("email_address");
-	var member_number = window.localStorage.getItem("member_number");
-	
-	service.login_automatic_to_forum(email_address, member_number).done(function (employees) {
-		var data = jQuery.parseJSON(employees);//alert(email+' '+password);
+	if(logged_in == 'yes')
+	{
+		var first_login = window.localStorage.getItem("first_login");
 		
-		if(data.message == "success")
+		if(first_login == 'yes')
 		{
-			if(data.level == 1)
-			{
-				// junior tab be open for comment
-				$( "#junior" ).css( "display", 'inline-block' );
-				$( "#junior-button" ).css( "display", 'none' );
-
-				$( "#senior-message" ).html( "<p>You can only make comments on Juniors' Forum</p>");
-				$( "#badge-response" ).html( "<p>You can only make comments on Juniors' Forum </p>");
-
-			}
-			else if(data.level == 2)
-			{
-				// senior tab be open for comment
-				$( "#senior" ).css( "display", 'inline-block' );
-				$( "#senior-button" ).css( "display", 'none' );
-
-				$( "#junior-message" ).html( "<p>You can only make comments on Seniors' Forum</p>");
-				$( "#badge-response" ).html( "<p>You can only make comments on Seniors' Forum </p>");
-			}
-			else if(data.level == 3)
-			{
-				// young professionals tab be open for comment 
-				$( "#professionals" ).css( "display", 'inline-block' );
-				$( "#professionals-button" ).css( "display", 'none' );
-
-				$( "#senior-message" ).html( "<p>You can only make comments on Young Professionals Forum</p>");
-				$( "#badge-response" ).html( '<div class="alert alert-danger center-align">You can only make comments on Young Professionals Forum </div>"');
-			}
-			//set local variables for future auto login
-
-			window.localStorage.setItem("level_id", data.level);
-			window.localStorage.setItem("email_address", $("input[name=email_address]").val());
-			window.localStorage.setItem("member_number", $("input[name=member_number]").val());
-
+			var mainView = myApp.addView('.view-main');
+			mainView.router.loadPage('dist/change_password.html');
 		}
+		
 		else
 		{
-			$("#response").html('<div class="alert alert-danger center-align">'+data.result+'</div>').fadeIn( "slow");
+			var mainView = myApp.addView('.view-main');
+			mainView.router.loadPage('dist/dashboard.html');
 		}
-		
-		$( "#loader-wrapper" ).addClass( "display_none" );
-	});
+	}
 }
 $(document).on('pageInit', '.page[data-page="index"]', function (e) 
 {
 	// alert("this is real life");
 })
 
-//Register member
-$(document).on("submit","form#register_member",function(e)
-{
-	e.preventDefault();
-	
-	//get form values
-	var form_data = new FormData(this);
-		
-	$("#register_response").html('').fadeIn( "slow");
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-	
-	//check if there is a network connection
-	var connection = true;//is_connected();
-	
-	if(connection === true)
-	{
-		var service = new Login_service();
-		service.initialize().done(function () {
-			console.log("Service initialized");
-		});
-		
-		
-		service.register_member(form_data).done(function (employees) {
-			var data = jQuery.parseJSON(employees);
-			
-			if(data.message == "success")
-			{
-				//set local variables for future auto login
-				window.localStorage.setItem("member_email", $("input[name=email]").val());
-				window.localStorage.setItem("member_password", $("input[name=password]").val());
-				window.localStorage.setItem("member_phone", $("input[name=phone]").val());
-				window.localStorage.setItem("member_first_name", $("input[name=first_name]").val());
-				window.localStorage.setItem("member_last_name", $("input[name=last_name]").val());
-				window.localStorage.setItem("member_company", $("input[name=company]").val());
-				window.localStorage.setItem("member_no", $("input[name=member_no]").val());
-			}
-			alert(data.result);
-			
-			$( "#loader-wrapper" ).addClass( "display_none" );
-        });
-	}
-	
-	else
-	{
-		$("#register_response").html('<div class="alert alert-danger center-align">'+"No internet connection - please check your internet connection then try again"+'</div>').fadeIn( "slow");
-		$( "#loader-wrapper" ).addClass( "display_none" );
-	}
-	return false;
-});
-
 function HideModalPopup() 
 {
- $("#ModalBehaviour").hide(); 
+	$("#ModalBehaviour").hide(); 
 }
-
-//Login member
-
 
 //Login member
 $(document).on("submit","form#login_forum_member",function(e)
 {
 	e.preventDefault();
+	myApp.showIndicator();
 	//get form values
 	var form_data = new FormData(this);
 	
@@ -260,65 +121,93 @@ $(document).on("submit","form#login_forum_member",function(e)
 		service.initialize().done(function () {
 			console.log("Service initialized");
 		});
-		
 		
 		service.login_to_forum(form_data).done(function (employees) {
 			var data = jQuery.parseJSON(employees);
 			
 			if(data.message == "success")
 			{
-				if(data.level == 1)
+				window.localStorage.setItem("email_address", $("input[name=email_address]").val());
+				window.localStorage.setItem("password", $("input[name=password]").val());
+				window.localStorage.setItem("logged_in", 'yes');
+				window.localStorage.setItem("member_no", data.result.member_no);
+				window.localStorage.setItem("member_name", data.result.member_name);
+				window.localStorage.setItem("date_of_birth", data.result.date_of_birth);
+				window.localStorage.setItem("member_id", data.result.member_id);
+				window.localStorage.setItem("member_type_id", data.result.member_type_id);
+				window.localStorage.setItem("first_login", data.result.first_login);
+				//alert(data.result.member_type_id);
+				if(data.result.first_login == 'yes')
 				{
-					// junior tab be open for comment
-					$( "#junior" ).css( "display", 'inline-block' );
-					$( "#junior-button" ).css( "display", 'none' );
-
-					$( "#senior-message" ).html( "<p>You can only make comments on Juniors' Forum</p>");
-					$( "#badge-response" ).html( "<p>You can only make comments on Juniors' Forum </p>");
-
+					var mainView = myApp.addView('.view-main');
+					mainView.router.loadPage('dist/change_password.html');
 				}
-				else if(data.level == 2)
+				
+				else
 				{
-					// senior tab be open for comment
-					$( "#senior" ).css( "display", 'inline-block' );
-					$( "#senior-button" ).css( "display", 'none' );
-
-					$( "#junior-message" ).html( "<p>You can only make comments on Seniors' Forum</p>");
-					$( "#badge-response" ).html( "<p>You can only make comments on Seniors' Forum </p>");
+					var mainView = myApp.addView('.view-main');
+					mainView.router.loadPage('dist/dashboard.html');
 				}
-				else if(data.level == 3)
-				{
-					// young professionals tab be open for comment 
-					$( "#professionals" ).css( "display", 'inline-block' );
-					$( "#professionals-button" ).css( "display", 'none' );
-
-					$( "#senior-message" ).html( "<p>You can only make comments on Young Professionals Forum</p>");
-					$( "#badge-response" ).html( '<div class="alert alert-danger center-align">You can only make comments on Young Professionals Forum </div>"');
-				}
-				//set local variables for future auto login
-
-				window.localStorage.setItem("level_id", data.level);
+				myApp.hideIndicator();
 				myApp.alert('You have successfully logged in', 'Login Response');
-
-				var mainView = myApp.addView('.view-main');
 	
-				mainView.router.loadPage('dist/dashboard.html');
-
 			}
 			else
 			{
+				myApp.hideIndicator();
 				myApp.alert(''+data.result+'', 'Login Response');
 			}
-			
-
         });
 	}
 	
 	else
 	{
-		myApp.addNotification({
-	        message: 'No internet connection - please check your internet connection then try again'
-	    });
+		myApp.alert('No internet connection - please check your internet connection then try again', 'Login Error');
+	}
+	return false;
+});
+
+//Login member
+$(document).on("submit","form#change_password",function(e)
+{
+	e.preventDefault();
+	myApp.showIndicator();
+	//get form values
+	var form_data = new FormData(this);
+	
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new Login_service();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.change_password(form_data).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				myApp.hideIndicator();
+				window.localStorage.setItem("first_login", 'no');
+				myApp.alert('Password changed successfully', 'Login Response');
+				var mainView = myApp.addView('.view-main');
+				mainView.router.loadPage('dist/dashboard.html');
+	
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(''+data.result+'', 'DG');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.alert('No internet connection - please check your internet connection then try again', 'DG');
 	}
 	return false;
 });
@@ -340,11 +229,6 @@ function get_profile_details()
 			// $( "#news-of-icpak" ).addClass( "display_block" );
 			$( "#my_profile" ).html( data.result );
 			$( "#loader-wrapper" ).addClass( "display_none" );
-		}
-		
-		else
-		{
-
 		}
 	});
 }
@@ -404,63 +288,6 @@ function get_social_user()
 	});
 }
 
-
-
-//cpd forum query member
-$(document).on("submit","form#cpd_query_form",function(e)
-{
-	e.preventDefault();
-	
-	//get form values
-	var form_data = new FormData(this);
-		
-	$("#cpdquery_response").html('').fadeIn( "slow");
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-
-	$( ".main-nav ul li#pro_social" ).css( "display", 'inline-block' );
-	$( ".main-nav ul li#profile" ).css( "display", 'inline-block' );
-	$( ".main-nav ul li#cpd_live" ).css( "display", 'inline-block' );
-
-	//check if there is a network connection
-	var connection = true;//is_connected();
-	
-	if(connection === true)
-	{
-		var service = new Login_service();
-		service.initialize().done(function () {
-			console.log("Service initialized");
-		});
-		
-		
-		service.post_cpd_query(form_data).done(function (employees) {
-			var data = jQuery.parseJSON(employees);
-			
-			if(data.message == "success")
-			{
-				//set local variables for future auto login
-
-				$("#cpdquery_response").html('<div class="alert alert-success center-align">'+"Your question has been submited."+'</div>').fadeIn( "slow");
-		
-			}
-			else
-			{
-				$("#cpdquery_response").html('<div class="alert alert-danger center-align">'+data.result+'</div>').fadeIn( "slow");
-
-			}
-			
-			$( "#loader-wrapper" ).addClass( "display_none" );
-        });
-	}
-	
-	else
-	{
-		$("#cpdquery_response").html('<div class="alert alert-danger center-align">'+"No internet connection - please check your internet connection then try again"+'</div>').fadeIn( "slow");
-		$( "#loader-wrapper" ).addClass( "display_none" );
-	}
-	// get_profile_details();
-	return false;
-});
-
 function set_news_data()
 {
 		var service = new EmployeeNewsService();
@@ -487,123 +314,6 @@ function change_to_arms()
 	window.location.href = "arms.html";
 }
 
-$$(document).on('pageInit', '.page[data-page="influencers"]', function (e) 
-{
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-	var service = new EmployeeNewsService();
-	service.initialize().done(function () {
-		console.log("Service initialized");
-	});
-	
-	//get client's credentials
-	
-	service.get_influencers().done(function (employees) {
-		var data = jQuery.parseJSON(employees);
-		
-		if(data.message == "success")
-		{
-			// $( "#news-of-icpak" ).addClass( "display_block" );
-			$( "#influencers_news" ).html( data.result );
-			$( "#loader-wrapper" ).addClass( "display_none" );
-			window.localStorage.setItem("influencers_news", data.result);
-			//window.localStorage.setItem("total_news", data.total_received);
-		}
-		
-		else
-		{
-			$( "#loader-wrapper" ).addClass( "display_none" );
-		}
-	});
-})
-$$(document).on('pageInit', '.page[data-page="juniors"]', function (e) 
-{
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-	var service = new EmployeeNewsService();
-	service.initialize().done(function () {
-		console.log("Service initialized");
-	});
-	
-	//get client's credentials
-	
-	service.get_junior().done(function (employees) {
-		var data = jQuery.parseJSON(employees);
-		
-		if(data.message == "success")
-		{
-			// $( "#news-of-icpak" ).addClass( "display_block" );
-			$( "#junior_news" ).html( data.result );
-			$( "#loader-wrapper" ).addClass( "display_none" );
-			$( "#junior-button" ).addClass( "display_none" );
-			$( "#junior-message" ).addClass( "display_block" );
-			window.localStorage.setItem("junior_news", data.result);
-			//window.localStorage.setItem("total_news", data.total_received);
-		}
-		
-		else
-		{
-			$( "#loader-wrapper" ).addClass( "display_none" );
-		}
-	});
-})
-
-$$(document).on('pageInit', '.page[data-page="professionals"]', function (e) 
-{
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-	var service = new EmployeeNewsService();
-	service.initialize().done(function () {
-		console.log("Service initialized");
-	});
-	
-	//get client's credentials
-	
-	service.get_professionals().done(function (employees) {
-		var data = jQuery.parseJSON(employees);
-		
-		if(data.message == "success")
-		{
-			// $( "#news-of-icpak" ).addClass( "display_block" );
-			$( "#professionals_news" ).html( data.result );
-			$( "#loader-wrapper" ).addClass( "display_none" );
-			window.localStorage.setItem("professionals_news", data.result);
-			//window.localStorage.setItem("total_news", data.total_received);
-		}
-		
-		else
-		{
-			$( "#loader-wrapper" ).addClass( "display_none" );
-		}
-	});
-});
-
-$$(document).on('pageInit', '.page[data-page="investors"]', function (e) 
-{
-	$( "#loader-wrapper" ).removeClass( "display_none" );
-	var service = new EmployeeNewsService();
-	service.initialize().done(function () {
-		console.log("Service initialized");
-	});
-	
-	//get client's credentials
-	
-	service.get_investors().done(function (employees) {
-		var data = jQuery.parseJSON(employees);
-		
-		if(data.message == "success")
-		{
-			// $( "#news-of-icpak" ).addClass( "display_block" );
-			$( "#investors_news" ).html( data.result );
-			$( "#loader-wrapper" ).addClass( "display_none" );
-			window.localStorage.setItem("investors_news", data.result);
-			//window.localStorage.setItem("total_news", data.total_received);
-		}
-		
-		else
-		{
-			$( "#loader-wrapper" ).addClass( "display_none" );
-		}
-	});
-});
-
 //Share post
 $(document).on("click","a.share_post",function(e)
 {
@@ -624,31 +334,503 @@ $(document).on("click","a.share_post",function(e)
 	return false;
 });
 
-$$(document).on('pageInit', '.page[data-page="dashboard"]', function (e) 
+function refresh_sermons_timer()
 {
-	$( "#navbar-item" ).removeClass( "display_none" );
-
-});
-
-$$(document).on('pageInit', '.page[data-page="sermons"]', function (e) 
-{
-	$( "#dashboard-back" ).removeClass( "display_none" );
-	$( "#side-menu-bars" ).addClass( "display_none" );
-});
-
-function backtodashboard()
-{
-
-	var mainView = myApp.addView('.view-main');
+	var service = new EmployeeSermonService();
+	service.initialize().done(function () {
+		console.log("Service initialized");
+	});
 	
-	mainView.router.loadPage('dist/dashboard.html');
-
-	$( "#navbar-item" ).removeClass( "display_none" );
-	$( "#side-menu-bars" ).removeClass( "display_none" );
-	$( "#dashboard-back" ).addClass( "display_none" );
-
-
+	service.getallLatesSermon().done(function (employees) {
+		var data = jQuery.parseJSON(employees);
+		
+		if(data.message == "success")
+		{
+			var total_sermons = window.localStorage.getItem("total_sermons");
+			var new_sermons = data.total_received;
+			window.localStorage.setItem("new_sermons", new_sermons);
+			
+			if(total_sermons != data.total_received)
+			{
+				window.localStorage.setItem("sermons_list", data.result);
+			}
+		}
+	});
 }
 
+function refresh_sermons_display()
+{
+	var total_sermons = window.localStorage.getItem("total_sermons");
+	var new_sermons = window.localStorage.getItem("new_sermons");
+	
+	//case of new adds
+	if(new_sermons != total_sermons)
+	{
+		window.localStorage.setItem("total_sermons", new_sermons);
+		var sermons_list = window.localStorage.getItem("sermons_list");
+		$( "#all_sermons" ).html( sermons_list );
+	}
+}
 
+function get_sermon_description(id)
+{
+	myApp.showIndicator();
+	//var sermon_details = null;
+	var sermon_details = window.localStorage.getItem("sermon_details"+id);
+	
+	if((sermon_details == "") || (sermon_details == null) || (sermon_details == "null"))
+	{
+		var service = new EmployeeSermonService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getSermonDetail(id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("sermon_details"+id, data.result);
+				$( "#sermons_detail" ).html( data.result );
+				myApp.hideIndicator();
+			}
+			
+			else
+			{
+				myApp.alert('Oops. Unable to get sermon', 'DG');
+				myApp.hideIndicator();
+			}
+		});
+	}
+	
+	else
+	{
+		setTimeout(function () {
+			// change the page to home 
+			$( "#sermons_detail" ).html( sermon_details );
+			myApp.hideIndicator();
+		 }, 3000);
+	}
+}
 
+function refresh_events_timer()
+{
+	var service = new EmployeeNewsService();
+	service.initialize().done(function () {
+		console.log("Service initialized");
+	});
+	
+	//get client's credentials
+	
+	service.getallLatesNews().done(function (employees) {
+		var data = jQuery.parseJSON(employees);
+		
+		if(data.message == "success")
+		{
+			var total_events = window.localStorage.getItem("total_events");
+			var new_events = data.total_received;
+			window.localStorage.setItem("new_events", new_events);
+			
+			if(total_events != data.total_received)
+			{
+				window.localStorage.setItem("events_list", data.result);
+			}
+		}
+	});
+}
+
+function refresh_events_display()
+{
+	var total_events = window.localStorage.getItem("total_events");
+	var new_events = window.localStorage.getItem("new_events");
+	
+	//case of new adds
+	if(new_events != total_events)
+	{
+		window.localStorage.setItem("total_events", new_events);
+		var events_list = window.localStorage.getItem("events_list");
+		$( "#news_events" ).html( events_list );
+	}
+}
+
+function get_news_description(id)
+{
+	myApp.showIndicator();
+	
+	//get event details
+	var event_details = window.localStorage.getItem("event_details"+id);
+	//var event_details = null;
+	
+	if((event_details == "") || (event_details == null) || (event_details == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getNewsDetail(id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("event_details"+id, data.result);
+				$( "#event_details" ).html( data.result );
+				myApp.hideIndicator();
+			}
+			
+			else
+			{
+				myApp.alert('Oops. Unable to get event', 'DG');
+				myApp.hideIndicator();
+			}
+		});
+	}
+	
+	else
+	{
+		setTimeout(function () {
+			// change the page to home 
+			$( "#event_details" ).html( event_details );
+			myApp.hideIndicator();
+		 }, 3000);
+	}
+	
+	//display comments
+	window.localStorage.setItem("comment_post_id", id);
+	display_comments(id);
+}
+
+function display_comments(id)
+{
+	//get event comments
+	var event_comments = window.localStorage.getItem("event_comments"+id);
+	//var event_comments = null;
+	
+	if((event_comments == "") || (event_comments == null) || (event_comments == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getNewsComments(id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("event_comments"+id, data.result);
+				$( "#forum_comments" ).html( data.result );
+			}
+		});
+	}
+	
+	else
+	{
+		$( "#event_comments" ).html( event_comments );
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getNewsComments(id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("event_comments"+id, data.result);
+				$( "#forum_comments" ).html( data.result );
+			}
+		});
+	}
+}
+
+function refresh_blog_timer(id)
+{
+	var service = new EmployeeNewsService();
+	service.initialize().done(function () {
+		console.log("Service initialized");
+	});
+	var member_id = window.localStorage.getItem("member_id");
+	
+	service.getBlogDetail(id, member_id).done(function (employees) {
+		var data = jQuery.parseJSON(employees);
+		
+		if(data.message == "success")
+		{
+			var total_blog = window.localStorage.getItem("total_blog"+id);
+			var new_blog = data.total_received;
+			window.localStorage.setItem("new_blog"+id, new_blog);
+			
+			if(total_blog != data.total_received)
+			{
+				window.localStorage.setItem("blog_list"+id, data.result);
+			}
+		}
+	});
+}
+
+function refresh_blog_display(id)
+{
+	var total_blog = window.localStorage.getItem("total_blog"+id);
+	var new_blog = window.localStorage.getItem("new_blog"+id);
+	
+	//case of new adds
+	if(new_blog != total_blog)
+	{
+		window.localStorage.setItem("total_blog"+id, new_blog);
+		var blog_list = window.localStorage.getItem("blog_list"+id);
+		$( "#blog_details" ).html( blog_list );
+	}
+}
+
+function get_blog_description(id)
+{
+	myApp.showIndicator();
+	
+	//get event details
+	var blog_details = window.localStorage.getItem("blog_details"+id);
+	var blog_details = null;
+	
+	if((blog_details == "") || (blog_details == null) || (blog_details == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		var member_id = window.localStorage.getItem("member_id");
+		
+		service.getBlogDetail(id, member_id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			//alert('here');
+			if(data.message == "success")
+			{//alert(data.result);
+				window.localStorage.setItem("blog_details"+id, data.result);
+				window.localStorage.setItem("blog_title"+id, data.post_title);
+				window.localStorage.setItem("blog_content"+id, data.post_content);
+				window.localStorage.setItem("forum_post_id", id);
+				$( "#blog_details" ).html( data.result );
+				$( "h3#forum-title" ).html( data.post_title );
+				myApp.hideIndicator();
+			}
+			
+			else
+			{
+				myApp.alert('Oops. Unable to get blog', 'DG');
+				myApp.hideIndicator();
+			}
+		});
+	}
+	
+	else
+	{
+		setTimeout(function () {
+			// change the page to home 
+			var blog_title = window.localStorage.getItem("blog_title"+id);
+			window.localStorage.setItem("post_id", id);
+			$( "#blog_details" ).html( blog_details );
+			$( "#forum-title" ).html( blog_title );
+			myApp.hideIndicator();
+		 }, 3000);
+	}
+	
+	var refresh_blog_selection2 = setInterval(function(){ refresh_blog_timer(id) }, 2000);
+	var refresh_blog_display2 = setInterval(function(){ refresh_blog_display(id) }, 4000);
+}
+
+//Login member
+$(document).on("click","a.post-notification",function(e)
+{
+	var post_id = window.localStorage.getItem("forum_post_id");
+	var blog_title = window.localStorage.getItem("blog_title"+post_id);
+	var blog_content = window.localStorage.getItem("blog_content"+post_id);
+	myApp.addNotification({
+		title: blog_title,
+		message: blog_content
+	});	
+});
+
+//Login member
+$(document).on("click","a.add-comment",function()
+{
+	myApp.showIndicator();
+	
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		var member_id = window.localStorage.getItem("member_id");
+		var comment = $("#post_comment").val();
+		var post_id = window.localStorage.getItem("forum_post_id");
+		service.add_comment(comment, post_id, member_id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				myApp.hideIndicator();
+				$("#post_comment").val('');
+				get_blog_description(post_id);
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(data.result, 'Error');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.alert('No internet connection - please check your internet connection then try again', 'DG');
+		myApp.hideIndicator();
+	}
+	return false;
+});
+
+//Login member
+$(document).on("submit","form#CommentForm",function(e)
+{
+	e.preventDefault();
+	myApp.showIndicator();
+	
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		var member_id = window.localStorage.getItem("member_id");
+		var comment = $("textarea[name=comment]").val();
+		var post_id = $("input[name=post_id]").val();
+		service.add_comment(comment, post_id, member_id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				myApp.hideIndicator();
+				display_comments(post_id);
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(data.result, 'Error');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.alert('No internet connection - please check your internet connection then try again', 'DG');
+		myApp.hideIndicator();
+	}
+	return false;
+});
+
+function refresh_forum_timer()
+{
+	var service = new EmployeeNewsService();
+	service.initialize().done(function () {});
+	
+	var member_type_id = window.localStorage.getItem("member_type_id");
+	
+	service.get_forum_items(member_type_id).done(function (employees) {
+		var data = jQuery.parseJSON(employees);
+		
+		if(data.message == "success")
+		{
+			var total_forum = window.localStorage.getItem("total_forum");
+			var new_forum = data.total_received;
+			window.localStorage.setItem("new_forum", new_forum);
+			
+			if(total_forum != data.total_received)
+			{
+				window.localStorage.setItem("forum_list", data.result);
+			}
+		}
+		
+		else
+		{
+			myApp.hideIndicator();
+			myApp.alert("Please check your membership type then try again", 'Error');
+		}
+	});
+}
+
+function refresh_forum_display()
+{
+	var total_forum = window.localStorage.getItem("total_forum");
+	var new_forum = window.localStorage.getItem("new_forum");
+	var forum_list = window.localStorage.getItem("forum_list");
+	
+	if(forum_list == " ")
+	{
+		new_forum = total_forum;
+		window.localStorage.setItem("total_forum", new_forum);
+	}
+	
+	//case of new adds
+	if(new_forum != total_forum)
+	{
+		window.localStorage.setItem("total_forum", new_forum);
+		$( "#all_forums" ).html( forum_list );
+	}
+}
+
+$(document).on("submit","form#ContactFormHe",function(e)
+{
+	e.preventDefault();
+	myApp.showIndicator();
+	
+	//get form values
+	var form_data = new FormData(this);
+
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+		});
+		
+		service.post_contact_us(form_data).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				myApp.hideIndicator();
+				myApp.alert("Thank you for contact us, we will address your issue and get back to you shortly.", 'DG');
+		
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(data.result, 'DG');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.hideIndicator();
+		myApp.alert("No internet connection - please check your internet connection then try again", 'DG');
+	}
+	return false;
+});
+
+//pass the variable in the link as follows e.g. news.html?id=1
+//on the news.html page get the parameter by javascript as follows var id = getURLParameter('id');
+//the function to get the url parameter is defined below
+function getURLParameter(name)
+{
+	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+}

@@ -1,43 +1,86 @@
-<!-- We don't need full layout here, because this page will be parsed with Ajax-->
-<!-- Top Navbar-->
-<div class="navbar">
-  <div class="navbar-inner">
-    <div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>
-    <div class="center sliding">Services</div>
-    <div class="right">
-      <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
-    </div>
-  </div>
-</div>
 <div class="pages">
-  <!-- Page, data-page contains page name-->
-  <div data-page="dashboard" class="page dashboard">
-    <!-- Scrollable page content-->
-    <div class="page-content">
-      <div class="content-block ">
-      	<div class="row">
-          <div class="col-100">
-              <a href="#" class="button button-big active button-white">
-                GET ENGAGED
-              </a>
-          </div>
-      		
-      	</div>
-        <div class="row">
-          <div class="col-100">
-              <a href="dist/sermons.html" class="button button-big active button-white">
-                #03 CHURCH
-              </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-100">
-              <a href="dist/events.html" class="button button-big active button-white">
-                EVENTS
-              </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div data-page="dashboard" class="page dashboard navbar-fixed">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="left">
+                    <!-- Right link contains only icon - additional "icon-only" class-->
+                    <a href="#" class="link icon-only open-panel"> 
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <!-- We have home navbar without left link-->
+				<div class="center"><h3 class="choto">Dominion Generation</h3></div>
+                <div class="right">
+                    <!-- Right link contains only icon - additional "icon-only" class-->
+                    <a onClick="dist/profile.html" href="#" id="profile-icon" class="link icon-only" > 
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+			</div>
+		</div>
+        
+    	<!-- Scrollable page content-->
+		<div class="page-content">
+			<div class="content-block " style="margin-top:10%;">
+				<div class="row" id="dashboard_get_engaged">
+					<div class="col-100">
+						<a href="dist/forum.html" class="button button-big active button-white">
+							<div class="row">
+								<div class="col-40">
+									<img src="images/icons/purple/influence.png" />
+								</div>
+								<div class="col-60">
+									GET ENGAGED
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-100">
+						<a href="dist/sermons.html" class="button button-big active button-white">
+							<div class="row">
+								<div class="col-40">
+									<img src="images/icons/purple/bible.png" />
+								</div>
+								<div class="col-60">
+									3 MINUTE CHURCH
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-100">
+						<a href="dist/events.html" class="button button-big active button-white">
+							<div class="row">
+								<div class="col-40">
+									<img src="images/icons/purple/group.png" />
+								</div>
+								<div class="col-60">
+									EVENTS
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-100">
+						<a href="dist/contact.html" class="button button-big active button-white">
+							<div class="row">
+								<div class="col-40">
+									<img src="images/icons/purple/contact.png" />
+								</div>
+								<div class="col-60">
+									CONTACT
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+    
+	</div>
 </div>
