@@ -299,8 +299,12 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 		
 		else
 		{
-			myApp.hideIndicator();
-			myApp.alert("Please check your membership type then try again", 'Error');
+			// myApp.hideIndicator();
+			// myApp.alert("Please check your membership type then try again", 'Error');
+			myApp.alert("Please log in as a member to access the forums", 'Error');
+			
+			var mainView = myApp.addView('.view-main');
+			mainView.router.loadPage('dist/dashboard.html');
 		}
 	}
 	
@@ -334,8 +338,12 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 				
 				else
 				{
-					myApp.hideIndicator();
-					myApp.alert("Please check your membership type then try again", 'Error');
+					// myApp.hideIndicator();
+					// myApp.alert("Please check your membership type then try again", 'Error');
+					myApp.alert("Please log in as a member to access the forums", 'Error');
+			
+					var mainView = myApp.addView('.view-main');
+					mainView.router.loadPage('dist/dashboard.html');
 				}
 			});
 		}, 2000);
@@ -344,6 +352,23 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="single-event"]', function (e) 
 {
+});
+
+$$(document).on('pageInit', '.page[data-page="dashboard"]', function (e) 
+{
+	var member_type_id = window.localStorage.getItem("member_type_id");
+
+	if(member_type_id == null)
+	{
+		$( "#footer-links" ).removeClass( "display_none" );
+		$( "#sign-in-button" ).removeClass( "display_none" );
+	}
+	else
+	{
+		$( "#footer-links" ).addClass( "display_none" );
+		$( "#sign-in-button" ).addClass( "display_none" );
+		
+	}
 });
 
 $$(document).on('pageInit', '.page[data-page="blog-single"]', function (e) 

@@ -60,7 +60,7 @@ function onMenuKeyDown() {
 }
 
 $(document).ready(function(){
-	//localStorage.clear();
+	// localStorage.clear();
 	myApp.showIndicator();
 	setTimeout(function () {
 		myApp.hideIndicator();
@@ -760,7 +760,11 @@ function refresh_forum_timer()
 		else
 		{
 			myApp.hideIndicator();
-			myApp.alert("Please check your membership type then try again", 'Error');
+			// myApp.alert("Please check your membership type then try again", 'Error');
+			myApp.alert("Please log in as a member to access the forums", 'Error');
+			
+			var mainView = myApp.addView('.view-main');
+			mainView.router.loadPage('dist/dashboard.html');
 		}
 	});
 }
