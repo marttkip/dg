@@ -1,6 +1,3 @@
-var myApp = new Framework7();
-var $$ = Dom7;
-
 /* Function to check for network connectivity */
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -40,7 +37,7 @@ function back_refresh() {
 	// Handle the back button
 	myApp.showIndicator();
 	
-	var mainView = myApp.addView('.view-main');
+	
 	mainView.router.back();
 	mainView.router.refreshPage();
 	
@@ -49,7 +46,7 @@ function back_refresh() {
 
 function onBackKeyDown() {
 	// Handle the back button
-	var mainView = myApp.addView('.view-main');
+	
 	mainView.router.back();
 	mainView.router.refreshPage();
 }
@@ -66,7 +63,7 @@ $(document).ready(function(){
 		myApp.hideIndicator();
 		
 		// change the page to home 
-		var mainView = myApp.addView('.view-main');
+		
 		mainView.router.loadPage('dist/about.html');
 	 }, 2000);
 });
@@ -83,13 +80,13 @@ function automatic_login()
 		
 		if(first_login == 'yes')
 		{
-			var mainView = myApp.addView('.view-main');
+			
 			mainView.router.loadPage('dist/change_password.html');
 		}
 		
 		else
 		{
-			var mainView = myApp.addView('.view-main');
+			
 			mainView.router.loadPage('dist/dashboard.html');
 		}
 	}
@@ -139,13 +136,13 @@ $(document).on("submit","form#login_forum_member",function(e)
 				//alert(data.result.member_type_id);
 				if(data.result.first_login == 'yes')
 				{
-					var mainView = myApp.addView('.view-main');
+					
 					mainView.router.loadPage('dist/change_password.html');
 				}
 				
 				else
 				{
-					var mainView = myApp.addView('.view-main');
+					
 					mainView.router.loadPage('dist/dashboard.html');
 				}
 				myApp.hideIndicator();
@@ -193,7 +190,7 @@ $(document).on("submit","form#change_password",function(e)
 				myApp.hideIndicator();
 				window.localStorage.setItem("first_login", 'no');
 				myApp.alert('Password changed successfully', 'Login Response');
-				var mainView = myApp.addView('.view-main');
+				
 				mainView.router.loadPage('dist/dashboard.html');
 	
 			}
@@ -763,7 +760,7 @@ function refresh_forum_timer()
 			// myApp.alert("Please check your membership type then try again", 'Error');
 			myApp.alert("Please log in as a member to access the forums", 'Error');
 			
-			var mainView = myApp.addView('.view-main');
+			
 			mainView.router.loadPage('dist/dashboard.html');
 		}
 	});
