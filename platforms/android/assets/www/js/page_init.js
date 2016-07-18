@@ -352,4 +352,65 @@ $$(document).on('pageInit', '.page[data-page="blog-single"]', function (e)
 	$("#forum_post_id").val(post_id);
 });
 
+$$(document).on('pageInit', '.page[data-page="initiatives"]', function (e) 
+{
+	myApp.showIndicator();
+	//window.localStorage.setItem("initiatives_list", "");
+	var initiatives_list = window.localStorage.getItem("initiatives_list");
+	//initiatives_list = null;
+	if((initiatives_list == "") || (initiatives_list == null) || (initiatives_list == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getallinitiatives().done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				$( "#all_initiatives" ).html( data.result );
+				window.localStorage.setItem("initiatives_list", data.result);
+				window.localStorage.setItem("total_initiatives", data.total_received);
+			}
+		});
+	}
+	
+	else
+	{
+		$( "#all_initiatives" ).html( initiatives_list );
+	}
+	
+	refresh_ads_selection = setInterval(function(){ refresh_initiatives_timer() }, 20000);
+	refresh_ads_display = setInterval(function(){ refresh_initiatives_display() }, 30000);
+	
+	myApp.hideIndicator();
+	
+	// Pull to refresh advertisments
+	var ptrContent = $$('.pull-to-refresh-initiatives-content');
+	 
+	// Add 'refresh' listener on it
+	ptrContent.on('refresh', function (e) {
+		// Emulate 2s loading
+		setTimeout(function () {
+			var service = new EmployeeNewsService();
+			service.initialize().done(function () {
+				console.log("Service initialized");
+			});
+			
+			service.getallinitiatives().done(function (employees) {
+				var data = jQuery.parseJSON(employees);
+				
+				if(data.message == "success")
+				{
+					$( "#all_initiatives" ).html( data.result );
+					window.localStorage.setItem("initiatives_list", data.result);
+					window.localStorage.setItem("total_initiatives", data.total_received);
+					myApp.pullToRefreshDone(ptrContent);
+				}
+			});
+		}, 2000);
+	});
+});
 	

@@ -524,3 +524,7 @@ h2.page_title {
 #pages_maincontent h3 {
   color: #9c27b0;
 }
+.page_content img, .share_post img {
+  max-width:100px;
+}
+#photoslist li a{color:#673894;}

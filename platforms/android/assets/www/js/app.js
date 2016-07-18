@@ -834,3 +834,124 @@ function getURLParameter(name)
 {
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
 }
+
+
+function refresh_initiatives_timer()
+{
+	var service = new EmployeeNewsService();
+	service.initialize().done(function () {
+		console.log("Service initialized");
+	});
+	
+	service.getallinitiatives().done(function (employees) {
+		var data = jQuery.parseJSON(employees);
+		
+		if(data.message == "success")
+		{
+			var total_initiatives = window.localStorage.getItem("total_initiatives");
+			var new_initiatives = data.total_received;
+			window.localStorage.setItem("new_initiatives", new_initiatives);
+			
+			if(total_initiatives != data.total_received)
+			{
+				window.localStorage.setItem("initiatives_list", data.result);
+			}
+		}
+	});
+}
+
+function refresh_initiatives_display()
+{
+	var total_initiatives = window.localStorage.getItem("total_initiatives");
+	var new_initiatives = window.localStorage.getItem("new_initiatives");
+	
+	//case of new adds
+	if(new_initiatives != total_initiatives)
+	{
+		window.localStorage.setItem("total_initiatives", new_initiatives);
+		var initiatives_list = window.localStorage.getItem("initiatives_list");
+		$( "#all_initiatives" ).html( initiatives_list );
+	}
+}
+
+function get_initiative_page(id)
+{
+	myApp.showIndicator();
+	//var sermon_details = null;
+	var initiative_items = window.localStorage.getItem("initiative_items"+id);
+	//initiative_items = null;
+	if((initiative_items == "") || (initiative_items == null) || (initiative_items == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getInitativePage(id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("initiative_items"+id, data.result);
+				$( "#initiative_items" ).html( data.result );
+				myApp.hideIndicator();
+			}
+			
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert('Oops. Unable to get initiatives', 'DG');
+			}
+		});
+	}
+	
+	else
+	{
+		setTimeout(function () {
+			// change the page to home 
+			$( "#initiative_items" ).html( initiative_items );
+			myApp.hideIndicator();
+		 }, 3000);
+	}
+}
+
+function get_initiatives_description(id, parent_id)
+{
+	myApp.showIndicator();
+	//var sermon_details = null;
+	var initiative_details = window.localStorage.getItem("initiative_details"+id);
+	
+	if((initiative_details == "") || (initiative_details == null) || (initiative_details == "null"))
+	{
+		var service = new EmployeeNewsService();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.getInitiativeDetail(id,parent_id).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+				window.localStorage.setItem("initiative_details"+id, data.result);
+				$( "#initiatives_detail" ).html( data.result );
+				myApp.hideIndicator();
+			}
+			
+			else
+			{
+				myApp.alert('Oops. Unable to get initiative', 'DG');
+				myApp.hideIndicator();
+			}
+		});
+	}
+	
+	else
+	{
+		setTimeout(function () {
+			// change the page to home 
+			$( "#initiatives_detail" ).html( initiative_details );
+			myApp.hideIndicator();
+		 }, 3000);
+	}
+}
