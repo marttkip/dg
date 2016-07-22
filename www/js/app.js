@@ -48,7 +48,8 @@ function onBackKeyDown() {
 	// Handle the back button
 	
 	mainView.router.back();
-	mainView.router.refreshPage();
+	// mainView.router.refreshPage();
+	// mainView.router.refreshPreviousPage();
 }
 
 function onMenuKeyDown() {
@@ -583,9 +584,10 @@ function refresh_blog_display(id)
 {
 	var total_blog = window.localStorage.getItem("total_blog"+id);
 	var new_blog = window.localStorage.getItem("new_blog"+id);
+	var first_load = window.localStorage.getItem("first"+id);
 	
 	//case of new adds
-	if(new_blog != total_blog)
+	if((new_blog != total_blog) && (first_load == 'no'))
 	{
 		window.localStorage.setItem("total_blog"+id, new_blog);
 		var blog_list = window.localStorage.getItem("blog_list"+id);
@@ -600,6 +602,7 @@ function get_blog_description(id)
 	//get event details
 	var blog_details = window.localStorage.getItem("blog_details"+id);
 	var blog_details = null;
+	window.localStorage.setItem("first"+id, 'no');
 	
 	if((blog_details == "") || (blog_details == null) || (blog_details == "null"))
 	{
@@ -614,6 +617,7 @@ function get_blog_description(id)
 			//alert('here');
 			if(data.message == "success")
 			{//alert(data.result);
+				window.localStorage.setItem("first"+id, 'yes');
 				window.localStorage.setItem("blog_details"+id, data.result);
 				window.localStorage.setItem("blog_title"+id, data.post_title);
 				window.localStorage.setItem("blog_content"+id, data.post_content);
