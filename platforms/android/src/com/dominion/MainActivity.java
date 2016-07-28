@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.example.DG;
+package com.dominion;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

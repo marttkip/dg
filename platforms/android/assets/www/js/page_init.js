@@ -3,7 +3,7 @@ var refresh_ads_display;
 
 $$(document).on('pageInit', '.page[data-page="login-screen"]', function (e) 
 {
-	mainView.hideNavbar();
+	//mainView.hideNavbar();
 	
 	myApp.hideIndicator();
 	
@@ -32,6 +32,7 @@ $$(document).on('pageInit', '.page[data-page="change-password-screen"]', functio
 
 $$(document).on('pageInit', '.page[data-page="influencers"]', function (e) 
 {
+	mainView.showNavbar();
 	$( "#loader-wrapper" ).removeClass( "display_none" );
 	var service = new EmployeeNewsService();
 	service.initialize().done(function () {
@@ -60,6 +61,7 @@ $$(document).on('pageInit', '.page[data-page="influencers"]', function (e)
 })
 $$(document).on('pageInit', '.page[data-page="juniors"]', function (e) 
 {
+	mainView.showNavbar();
 	$( "#loader-wrapper" ).removeClass( "display_none" );
 	var service = new EmployeeNewsService();
 	service.initialize().done(function () {
@@ -91,6 +93,7 @@ $$(document).on('pageInit', '.page[data-page="juniors"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="professionals"]', function (e) 
 {
+	mainView.showNavbar();
 	$( "#loader-wrapper" ).removeClass( "display_none" );
 	var service = new EmployeeNewsService();
 	service.initialize().done(function () {
@@ -120,6 +123,7 @@ $$(document).on('pageInit', '.page[data-page="professionals"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="investors"]', function (e) 
 {
+	mainView.showNavbar();
 	$( "#loader-wrapper" ).removeClass( "display_none" );
 	var service = new EmployeeNewsService();
 	service.initialize().done(function () {
@@ -149,6 +153,7 @@ $$(document).on('pageInit', '.page[data-page="investors"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="sermons"]', function (e) 
 {
+	mainView.showNavbar();
 	myApp.showIndicator();
 	
 	var sermons_list = window.localStorage.getItem("sermons_list");
@@ -210,6 +215,7 @@ $$(document).on('pageInit', '.page[data-page="sermons"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="event-page"]', function (e) 
 {
+	mainView.showNavbar();
 	myApp.showIndicator();
 	
 	var events_list = window.localStorage.getItem("events_list");
@@ -276,12 +282,14 @@ $$(document).on('pageInit', '.page[data-page="event-page"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="single-event"]', function (e) 
 {
+	mainView.showNavbar();
 	var comment_post_id = window.localStorage.getItem("comment_post_id");
 	$("#comment_post_id").val(comment_post_id);
 });
 
 $$(document).on('pageInit', '.page[data-page="forum"]', function (e) 
 {
+	mainView.showNavbar();
 	myApp.showIndicator();
 	
 	var web_service = new EmployeeNewsService();
@@ -321,7 +329,7 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 			// myApp.alert("Please check your membership type then try again", 'Error');
 			myApp.alert("Please log in as a member to access the forums", 'Error');
 			
-			var mainView = myApp.addView('.view-main');
+			//var mainView = myApp.addView('.view-main');
 			mainView.router.loadPage('dist/dashboard.html');
 		}
 	}
@@ -360,7 +368,7 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 					// myApp.alert("Please check your membership type then try again", 'Error');
 					myApp.alert("Please log in as a member to access the forums", 'Error');
 			
-					var mainView = myApp.addView('.view-main');
+					//var mainView = myApp.addView('.view-main');
 					mainView.router.loadPage('dist/dashboard.html');
 				}
 			});
@@ -368,13 +376,34 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 	});
 });
 
+$$(document).on('pageInit', '.page[data-page="about"]', function (e) 
+{
+	//mainView.hideNavbar();
+});
+
+$$(document).on('pageInit', '.page[data-page="bars"]', function (e) 
+{
+	//mainView.hideNavbar();
+	//window.localStorage.clear();
+	myApp.showIndicator();
+	setTimeout(function () {
+		myApp.hideIndicator();
+		
+		// change the page to home 
+		
+		mainView.router.loadPage('dist/about.html');
+	 }, 2000);
+});
+
 $$(document).on('pageInit', '.page[data-page="single-event"]', function (e) 
 {
+	mainView.showNavbar();
 });
 
 $$(document).on('pageInit', '.page[data-page="dashboard"]', function (e) 
 {
 	mainView.showNavbar();
+	//mainView.showNavbar();
 	var member_type_id = window.localStorage.getItem("member_type_id");
 
 	if(member_type_id == null)
@@ -392,12 +421,14 @@ $$(document).on('pageInit', '.page[data-page="dashboard"]', function (e)
 
 $$(document).on('pageInit', '.page[data-page="blog-single"]', function (e) 
 {
+	mainView.showNavbar();
 	var post_id = window.localStorage.getItem("forum_post_id");
 	$("#forum_post_id").val(post_id);
 });
 
 $$(document).on('pageInit', '.page[data-page="initiatives"]', function (e) 
 {
+	mainView.showNavbar();
 	myApp.showIndicator();
 	//window.localStorage.setItem("initiatives_list", "");
 	var initiatives_list = window.localStorage.getItem("initiatives_list");

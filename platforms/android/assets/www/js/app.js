@@ -29,7 +29,7 @@ function onDeviceReady()
                         text:errorCode
                     });        
     };*/
-	document.addEventListener("backbutton", onBackKeyDown, false);
+	//document.addEventListener("backbutton", onBackKeyDown, false);
 	//document.addEventListener("menubutton", onMenuKeyDown, false);
 }
 
@@ -44,13 +44,13 @@ function back_refresh() {
 	myApp.hideIndicator();
 }
 
-function onBackKeyDown() {
+/*function onBackKeyDown() {
 	// Handle the back button
 	
 	mainView.router.back();
 	// mainView.router.refreshPage();
 	// mainView.router.refreshPreviousPage();
-}
+}*/
 
 function onMenuKeyDown() {
 	// Handle the back button
@@ -58,15 +58,7 @@ function onMenuKeyDown() {
 }
 
 $(document).ready(function(){
-	//window.localStorage.clear();
-	myApp.showIndicator();
-	setTimeout(function () {
-		myApp.hideIndicator();
-		
-		// change the page to home 
-		
-		mainView.router.loadPage('dist/about.html');
-	 }, 2000);
+	mainView.router.loadPage('dist/bars.html');
 });
 
 function automatic_login()
@@ -100,14 +92,9 @@ function automatic_login()
 	myApp.hideIndicator();
 }
 
-$(document).ready(function()
-{
-	mainView.hideNavbar();
-});
-
 $(document).on('pageInit', '.page[data-page="index"]', function (e) 
 {
-	mainView.hideNavbar();
+	//mainView.hideNavbar();
 })
 
 function HideModalPopup() 
