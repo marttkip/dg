@@ -34,6 +34,10 @@ var Login_service = function() {
 		var request = url + "login/get_client_profile";
         return $.ajax({url: request});
     }
+    this.registerProfessional = function(form_data) {
+        var request = url + "login/register_professional";
+        return $.ajax({url: request, data: form_data, type: 'POST', processData: false,contentType: false});
+    }
 
 }
 

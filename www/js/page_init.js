@@ -296,84 +296,115 @@ $$(document).on('pageInit', '.page[data-page="forum"]', function (e)
 	web_service.initialize().done(function () {
 		console.log("Service initialized");
 	});
-	var member_type_id = window.localStorage.getItem("member_type_id");
-		
-	var forum_list = window.localStorage.getItem("forum_list");
-	//forum_list = null;
+	var logged_in = window.localStorage.getItem("logged_in");
 	
-	if((forum_list == "") || (forum_list == null) || (forum_list == "null"))
+	if(logged_in == 'yes')
 	{
-		if(member_type_id > 0)
-		{
-			web_service.get_forum_items(member_type_id).done(function (employees) {
-				var data = jQuery.parseJSON(employees);
+			var member_type_id = window.localStorage.getItem("member_type_id");
 				
-				if(data.message == "success")
-				{
-					$( "#all_forums" ).html( data.result );
-					window.localStorage.setItem("forum_list", data.result);
-					window.localStorage.setItem("total_forum", data.total_received);
-				}
-				
-				else
-				{
-					myApp.hideIndicator();
-					myApp.alert(data.result, 'Error');
-				}
-			});
-		}
-		
-		else
-		{
-			// myApp.hideIndicator();
-			// myApp.alert("Please check your membership type then try again", 'Error');
-			myApp.alert("Please log in as a member to access the forums", 'Error');
+			var forum_list = window.localStorage.getItem("forum_list");
+			//forum_list = null;
 			
-			//var mainView = myApp.addView('.view-main');
-			mainView.router.loadPage('dist/dashboard.html');
-		}
-	}
-	
-	else
-	{
-		$( "#all_forums" ).html( forum_list );
-	}
-	
-	refresh_ads_selection = setInterval(function(){ refresh_forum_timer() }, 20000);
-	refresh_ads_display = setInterval(function(){ refresh_forum_display() }, 30000);
-	
-	myApp.hideIndicator();
-	
-	// Pull to refresh advertisments
-	var ptrContent = $$('.pull-to-refresh-forum-content');
-	 
-	// Add 'refresh' listener on it
-	ptrContent.on('refresh', function (e) {
-		// Emulate 2s loading
-		setTimeout(function () {
-			web_service.get_forum_items(member_type_id).done(function (employees) {
-				var data = jQuery.parseJSON(employees);
-				
-				if(data.message == "success")
+			if((forum_list == "") || (forum_list == null) || (forum_list == "null"))
+			{
+				if(member_type_id > 0)
 				{
-					$( "#all_forums" ).html( data.result );
-					window.localStorage.setItem("forum_list", data.result);
-					window.localStorage.setItem("total_forum", data.total_received);
-					myApp.pullToRefreshDone(ptrContent);
+					web_service.get_forum_items(member_type_id).done(function (employees) {
+						var data = jQuery.parseJSON(employees);
+						
+						if(data.message == "success")
+						{
+							$( "#all_forums" ).html( data.result );
+							window.localStorage.setItem("forum_list", data.result);
+							window.localStorage.setItem("total_forum", data.total_received);
+						}
+						
+						else
+						{
+							myApp.hideIndicator();
+							myApp.alert(data.result, 'Error');
+						}
+					});
 				}
 				
 				else
 				{
 					// myApp.hideIndicator();
 					// myApp.alert("Please check your membership type then try again", 'Error');
-					myApp.alert("Please log in as a member to access the forums", 'Error');
-			
-					//var mainView = myApp.addView('.view-main');
-					mainView.router.loadPage('dist/dashboard.html');
+					
+					
+					// mainView.router.loadPage('dist/login.html');
+					// window.location.href = 'dist/login.html';
+					// myApp.alert("Please log in as a member to access the forums", 'Error');
 				}
+			}
+			
+			else
+			{
+				$( "#all_forums" ).html( forum_list );
+			}
+			
+			refresh_ads_selection = setInterval(function(){ refresh_forum_timer() }, 20000);
+			refresh_ads_display = setInterval(function(){ refresh_forum_display() }, 30000);
+			
+			myApp.hideIndicator();
+			
+			// Pull to refresh advertisments
+			var ptrContent = $$('.pull-to-refresh-forum-content');
+			 
+			// Add 'refresh' listener on it
+			ptrContent.on('refresh', function (e) {
+				// Emulate 2s loading
+				setTimeout(function () {
+					web_service.get_forum_items(member_type_id).done(function (employees) {
+						var data = jQuery.parseJSON(employees);
+						
+						if(data.message == "success")
+						{
+							$( "#all_forums" ).html( data.result );
+							window.localStorage.setItem("forum_list", data.result);
+							window.localStorage.setItem("total_forum", data.total_received);
+							myApp.pullToRefreshDone(ptrContent);
+						}
+						
+						else
+						{
+							// myApp.hideIndicator();
+							// myApp.alert("Please check your membership type then try again", 'Error');
+							myApp.alert("Please log in as a member to access the forums", 'Error');
+					
+							//var mainView = myApp.addView('.view-main');
+							mainView.router.loadPage('dist/dashboard.html');
+						}
+					});
+				}, 2000);
 			});
-		}, 2000);
-	});
+	}
+	else
+	{
+		myApp.modal({
+	    title:  'Get Engaged',
+	    text: 'Do you want to be get engaged?',
+	    buttons: [
+	      {
+	        text: 'Not now',
+	        onClick: function() {
+	        	mainView.router.loadPage('dist/dashboard.html');
+	        }
+	      },
+	      {
+	        text: 'Okay proceed',
+	        onClick: function() {
+	            mainView.router.loadPage('dist/register.html');
+	        }
+	      },
+	    ]
+	  });
+
+		
+		// myApp.alert("Please log in as a member to access the forums", 'Error');
+		
+	}
 });
 
 $$(document).on('pageInit', '.page[data-page="about"]', function (e) 

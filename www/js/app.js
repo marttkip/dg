@@ -58,6 +58,7 @@ function onMenuKeyDown() {
 }
 
 $(document).ready(function(){
+	window.localStorage.clear();
 	mainView.router.loadPage('dist/bars.html');
 });
 
@@ -154,6 +155,51 @@ $(document).on("submit","form#login_forum_member",function(e)
 			{
 				myApp.hideIndicator();
 				myApp.alert(''+data.result+'', 'Login Response');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.alert('No internet connection - please check your internet connection then try again', 'Login Error');
+	}
+	return false;
+});
+
+//Login member
+$(document).on("submit","form#register_influencer",function(e)
+{
+	// alert("sdjahsdjaghj");
+	e.preventDefault();
+	myApp.showIndicator();
+	//get form values
+	var form_data = new FormData(this);
+	
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new Login_service();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.registerProfessional(form_data).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+			
+				myApp.hideIndicator();
+				mainView.router.loadPage('dist/dashboard.html');
+				myApp.alert(''+data.result+'', 'Get Engaged Response');
+	
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(''+data.result+'', 'Get Engaged Response');
 			}
         });
 	}
