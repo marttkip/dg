@@ -43,3 +43,6 @@ var mainView = myApp.addView('.view-main', {
     // Enable dynamic Navbar
     dynamicNavbar: false
 });
+var calendarDefault = myApp.calendar({
+    input: '#calendar-default',
+});

@@ -7,11 +7,15 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.example.DG"
-        },
         "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.example.DG"
+            "PACKAGE_NAME": "com.dominion"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.dominion"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "540631623027",
+            "PACKAGE_NAME": "com.dominion"
         }
     },
     "dependent_plugins": {}

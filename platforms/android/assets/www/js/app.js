@@ -5,30 +5,43 @@ document.addEventListener("deviceready", onDeviceReady, false);
 //
 function onDeviceReady() 
 {
-    /*cordova.plugins.backgroundMode.setDefaults({ title:'ICPAK LIVE', text:'ICPAK LIVE', silent: true});
-    
-    //check if background action is enabled
-    var enabled = cordova.plugins.backgroundMode.isEnabled();
-    if(enabled === false)
-    {
-        // Enable background mode
-        cordova.plugins.backgroundMode.enable();
-    }
+	//push notifications
+	var push = PushNotification.init({ "android": {"senderID": "540631623027"},
+         "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+	
+    push.on('registration', function(data) {
+        // data.registrationId
+		//console.log(data.registrationId);
+		//$("#gcm_id").html(data.registrationId);
+		window.localStorage.setItem("dg_registrationId", data.registrationId);
+    });
 
-    // Called when background mode has been activated
-    cordova.plugins.backgroundMode.onactivate = function () {
-        
-        //clear other timeouts
-        //clearTimeout(all_message_timeout);
-        //clearTimeout(single_message_timeout);
-        
-    };
-    
-    cordova.plugins.backgroundMode.onfailure = function(errorCode) {
-        cordova.plugins.backgroundMode.configure({
-                        text:errorCode
-                    });        
-    };*/
+    push.on('notification', function(data) {
+        // data.message,
+        // data.title,
+        // data.count,
+        // data.sound,
+        // data.image,
+        // data.additionalData
+		
+		var source_data = data.additionalData;
+		var id = source_data.additionalData;
+		//console.log(data.message);
+		var current_page = mainView.activePage.name;
+		if(current_page != 'blog-single')
+		{
+			mainView.router.loadPage('dist/blog-single.html');
+			get_blog_description(id);
+		}
+		refresh_blog_timer(id);
+		//myApp.alert(data.title+" Message: " +data.message, 'Choto');
+    });
+
+    push.on('error', function(e) {
+        // e.message
+		console.log(e.message);
+		//myApp.alert(e.message, 'Error');
+    });
 	//document.addEventListener("backbutton", onBackKeyDown, false);
 	//document.addEventListener("menubutton", onMenuKeyDown, false);
 }
@@ -58,6 +71,7 @@ function onMenuKeyDown() {
 }
 
 $(document).ready(function(){
+	//window.localStorage.clear();
 	mainView.router.loadPage('dist/bars.html');
 });
 
@@ -69,6 +83,7 @@ function automatic_login()
 	
 	if(logged_in == 'yes')
 	{
+		add_registration_id();
 		var first_login = window.localStorage.getItem("first_login");
 		
 		if(first_login == 'yes')
@@ -90,6 +105,23 @@ function automatic_login()
 		mainView.router.loadPage('dist/login.html');
 	}
 	myApp.hideIndicator();
+}
+
+function add_registration_id()
+{
+	var dg_registrationId = window.localStorage.getItem("dg_registrationId");
+	var member_id = window.localStorage.getItem("member_id");
+	
+	var service = new Login_service();
+	service.initialize().done(function () {
+		console.log("Service initialized");
+	});
+	service.add_registration_id(member_id, dg_registrationId).done(function (employees)
+	{
+		var data2 = jQuery.parseJSON(employees);
+		
+		console.log(data2);
+	});
 }
 
 $(document).on('pageInit', '.page[data-page="index"]', function (e) 
@@ -135,9 +167,9 @@ $(document).on("submit","form#login_forum_member",function(e)
 				window.localStorage.setItem("member_type_id", data.result.member_type_id);
 				window.localStorage.setItem("first_login", data.result.first_login);
 				//alert(data.result.member_type_id);
+				add_registration_id();
 				if(data.result.first_login == 'yes')
 				{
-					
 					mainView.router.loadPage('dist/change_password.html');
 				}
 				
@@ -154,6 +186,51 @@ $(document).on("submit","form#login_forum_member",function(e)
 			{
 				myApp.hideIndicator();
 				myApp.alert(''+data.result+'', 'Login Response');
+			}
+        });
+	}
+	
+	else
+	{
+		myApp.alert('No internet connection - please check your internet connection then try again', 'Login Error');
+	}
+	return false;
+});
+
+//Login member
+$(document).on("submit","form#register_influencer",function(e)
+{
+	// alert("sdjahsdjaghj");
+	e.preventDefault();
+	myApp.showIndicator();
+	//get form values
+	var form_data = new FormData(this);
+	
+	//check if there is a network connection
+	var connection = true;//is_connected();
+	
+	if(connection === true)
+	{
+		var service = new Login_service();
+		service.initialize().done(function () {
+			console.log("Service initialized");
+		});
+		
+		service.registerProfessional(form_data).done(function (employees) {
+			var data = jQuery.parseJSON(employees);
+			
+			if(data.message == "success")
+			{
+			
+				myApp.hideIndicator();
+				mainView.router.loadPage('dist/dashboard.html');
+				myApp.alert(''+data.result+'', 'Get Engaged Response');
+	
+			}
+			else
+			{
+				myApp.hideIndicator();
+				myApp.alert(''+data.result+'', 'Get Engaged Response');
 			}
         });
 	}
@@ -562,6 +639,7 @@ function refresh_blog_timer(id)
 			if(total_blog != data.total_received)
 			{
 				window.localStorage.setItem("blog_list"+id, data.result);
+				refresh_blog_display(id);
 			}
 		}
 	});
@@ -634,8 +712,8 @@ function get_blog_description(id)
 		 }, 3000);
 	}
 	
-	var refresh_blog_selection2 = setInterval(function(){ refresh_blog_timer(id) }, 2000);
-	var refresh_blog_display2 = setInterval(function(){ refresh_blog_display(id) }, 4000);
+	/*var refresh_blog_selection2 = setInterval(function(){ refresh_blog_timer(id) }, 2000);
+	var refresh_blog_display2 = setInterval(function(){ refresh_blog_display(id) }, 4000);*/
 }
 
 //Login member

@@ -548,3 +548,6 @@ h2.page_title {
 {
   margin:5px auto;
 }
+.messagebar textarea {
+  width: 80% !important;
+}
